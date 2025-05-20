@@ -93,7 +93,14 @@ export class TelegramService implements OnModuleInit {
                 try {
                     const res = await axios.get(`http://79.133.46.247:3000/create?publicKey=${customName}`);
                     const config = res.data.replace('79.133.46.247', 'be.jettingwire.xyz');
-                    const buffer = Buffer.from(config, 'utf-8');
+                    const blob = new Blob([config], { type: 'text/plain;charset=utf-8' });
+
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `${userName}.ovpn`; // نام فایل بر اساس نام کاربر
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
 
                     await ctx.replyWithDocument({ source: buffer, filename: `${customName}.ovpn` });
                 } catch (err) {
